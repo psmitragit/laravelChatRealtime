@@ -22,9 +22,18 @@
             @endforeach
         </div>
 
-        <div class="message-input">
-            <input type="text" wire:model.defer="message" placeholder="Type a message...">
-            <button wire:click="sendMessage">Send</button>
-        </div>
+        <form wire:submit.prevent='sendMessage'>
+            <div class="message-input">
+                <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message...">
+                <button type="submit">Send</button>
+            </div>
+        </form>
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('reFocus', function() {
+            document.getElementById('typeMessageId').focus();
+        })
+    })
+</script>

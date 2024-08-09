@@ -44,4 +44,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function messagesToMe()
+    {
+        return $this->hasMany(Message::class, 'from')->where('to', auth()->id());
+    }
+
+    public function lastMessageToMe()
+    {
+        return $this->hasOne(Message::class, 'from')->where('to', auth()->id())->latest();
+    }
 }

@@ -20,12 +20,21 @@ class Chat extends Component
     {
         $this->recipientId = $recipientId ?? auth()->id();
         $this->loadUsers();
-        $this->loadMessages();
     }
 
     public function loadUsers()
     {
-        $this->users = User::where('id', '!=', auth()->id())->get();
+        $this->users = User::where('id', '!=', auth()->id())
+            ->withCount(['messagesToMe' => function ($query) {
+                $query->where('to', auth()->id())->where('is_seen', false);
+            }])
+            ->with(['lastMessageToMe' => function ($query) {
+                $query->where('to', auth()->id())->latest();
+            }])
+            ->get()
+            ->sortByDesc(function ($user) {
+                return optional($user->lastMessageToMe)->created_at;
+            });
 
         $this->unreadCounts = $this->users->mapWithKeys(function ($user) {
             return [$user->id => Message::where('to', auth()->id())->where('from', $user->id)->where('is_seen', false)->count()];
@@ -40,7 +49,6 @@ class Chat extends Component
             $query->where('from', $this->recipientId)->where('to', auth()->id());
         })->latest()->get()->reverse()->values()->toArray();
 
-        // Mark messages as seen
         $this->markMessagesAsSeen();
     }
 
@@ -62,29 +70,32 @@ class Chat extends Component
         $this->messages[] = array_merge($newMessage->toArray(), ['user' => auth()->user()->toArray()]);
 
         $this->message = '';
+        $this->dispatch('reFocus');
     }
 
     #[On('newMessageReceived')]
     public function notifyNewMessage($data)
     {
-        if ($data['message']['to'] == auth()->id()) {
-            $this->messages[] = array_merge($data['message'], ['user' => $data['user']]);
-        }
-        // Update unread message count or notify the user if the message is meant for the current recipient
         if ($data['message']['from'] === $this->recipientId) {
+            $this->messages[] = array_merge($data['message'], ['user' => $data['user']]);
             $this->markMessagesAsSeen();
+        } else {
+            $this->loadUsers();
         }
-    }
-
-    protected function markMessagesAsSeen()
-    {
-        Message::where('to', auth()->id())->where('from', $this->recipientId)->update(['is_seen' => true]);
     }
 
     public function switchRecipient($recipientId)
     {
         $this->recipientId = $recipientId;
         $this->loadMessages();
+        $this->markMessagesAsSeen();
+        $this->loadUsers();
+        $this->dispatch('reFocus');
+    }
+
+    protected function markMessagesAsSeen()
+    {
+        Message::where('to', auth()->id())->where('from', $this->recipientId)->update(['is_seen' => true]);
     }
 
     public function render()
