@@ -36,10 +36,10 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        // return [
-        //     new PrivateChannel('chat'),
-        // ];
-        return ['chat'];
+        $chanel = 'chat.' . $this->user->id;
+        return [
+            new PrivateChannel($chanel),
+        ];
     }
     public function broadcastWith()
     {
@@ -48,8 +48,7 @@ class MessageSent implements ShouldBroadcastNow
             'user' => $this->user->toArray(),
         ];
     }
-    public function broadcastAs()
-    {
+    public function broadcastAs(){
         return 'chat';
     }
 }

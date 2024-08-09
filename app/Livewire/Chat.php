@@ -57,7 +57,7 @@ class Chat extends Component
             'is_seen' => false,
         ]);
 
-        broadcast(new MessageSent($newMessage, auth()->user()))->toOthers();
+        broadcast(new MessageSent($newMessage, User::find($this->recipientId)));
 
         $this->messages[] = array_merge($newMessage->toArray(), ['user' => auth()->user()->toArray()]);
 
