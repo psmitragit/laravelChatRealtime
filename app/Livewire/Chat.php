@@ -18,7 +18,6 @@ class Chat extends Component
 
     public function mount($recipientId = null)
     {
-        $this->recipientId = $recipientId ?? auth()->id();
         $this->loadUsers();
     }
 

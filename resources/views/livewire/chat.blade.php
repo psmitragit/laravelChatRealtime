@@ -24,8 +24,8 @@
 
         <form wire:submit.prevent='sendMessage'>
             <div class="message-input">
-                <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message...">
-                <button type="submit">Send</button>
+                <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message..." {{ !$recipientId ? 'disabled' : '' }}>
+                <button type="submit" {{ !$recipientId ? 'disabled' : '' }}>Send</button>
             </div>
         </form>
     </div>
