@@ -17,3 +17,4 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/chat', [GeneralController::class, 'chat'])->middleware(['auth', 'verified']);
+Route::get('/group-chat', [GeneralController::class, 'groupChat'])->middleware(['auth', 'verified']);
