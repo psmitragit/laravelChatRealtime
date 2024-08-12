@@ -13,7 +13,7 @@
         </ul>
     </div>
 
-    <div class="chat-content" id="chat-content">
+    <div class="chat-content">
         <div class="messages">
             @foreach ($messages as $msg)
                 <div class="message {{ $msg['from'] == auth()->id() ? 'sent' : 'received' }}">
@@ -22,7 +22,7 @@
             @endforeach
         </div>
 
-        <form wire:submit.prevent='sendMessage'>
+        <form wire:submit.prevent='sendMessage' id="scrollToDiv">
             <div class="message-input">
                 <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message..."
                     {{ !$recipientId ? 'disabled' : '' }}>
@@ -35,12 +35,19 @@
     document.addEventListener('livewire:init', () => {
         Livewire.on('reFocus', function() {
             document.getElementById('typeMessageId').focus();
-            scrollToBottom();
         })
 
-        function scrollToBottom() {
-            const chatContent = document.getElementById('chat-content');
-            chatContent.scrollTop = chatContent.scrollHeight;
-        }
+        Livewire.on('scrollBottom', function() {
+            setTimeout(() => {
+                const messages = document.querySelectorAll('.message');
+                if (messages.length > 0) {
+                    const lastMessage = messages[messages.length - 1];
+                    lastMessage.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end'
+                    });
+                }
+            }, 100);
+        })
     })
 </script>

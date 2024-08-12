@@ -8,6 +8,7 @@
     <title>Chat</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body>
     <style>
         /* General styling for chat container */
@@ -26,6 +27,7 @@
             overflow-y: auto;
         }
 
+        /* List styles within sidebar */
         .chat-sidebar ul {
             list-style: none;
             padding: 0;
@@ -60,30 +62,40 @@
             display: flex;
             flex-direction: column;
             background-color: #fff;
+            height: 100%; /* Ensure it takes the full height of its container */
+            overflow-y: auto;
         }
 
+        /* Messages container */
         .messages {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
+            /* Ensure content fits properly and allows scrolling */
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Individual messages */
         .message {
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 5px;
         }
 
+        /* Sent messages */
         .message.sent {
             background-color: #e1ffc7;
             align-self: flex-end;
         }
 
+        /* Received messages */
         .message.received {
             background-color: #f1f0f0;
             align-self: flex-start;
         }
 
+        /* Message input styling */
         .message-input {
             display: flex;
             border-top: 1px solid #ddd;

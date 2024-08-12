@@ -70,6 +70,7 @@ class Chat extends Component
 
         $this->message = '';
         $this->dispatch('reFocus');
+        $this->dispatch('scrollBottom');
     }
 
     #[On('newMessageReceived')]
@@ -78,6 +79,7 @@ class Chat extends Component
         if ($data['message']['from'] === $this->recipientId) {
             $this->messages[] = array_merge($data['message'], ['user' => $data['user']]);
             $this->markMessagesAsSeen();
+            $this->dispatch('scrollBottom');
         } else {
             $this->loadUsers();
         }
@@ -90,6 +92,7 @@ class Chat extends Component
         $this->markMessagesAsSeen();
         $this->loadUsers();
         $this->dispatch('reFocus');
+        $this->dispatch('scrollBottom');
     }
 
     protected function markMessagesAsSeen()
