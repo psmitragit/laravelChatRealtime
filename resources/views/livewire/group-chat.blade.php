@@ -15,11 +15,30 @@
             </div>
             <form wire:submit.prevent='sendMessage' id="scrollToDiv">
                 <div class="message-input">
-                    <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message..."
-                    >
+                    <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message...">
                     <button type="submit">Send</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('reFocus', function() {
+            document.getElementById('typeMessageId').focus();
+        })
+
+        Livewire.on('scrollBottom', function() {
+            setTimeout(() => {
+                const messages = document.querySelectorAll('.message');
+                if (messages.length > 0) {
+                    const lastMessage = messages[messages.length - 1];
+                    lastMessage.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end'
+                    });
+                }
+            }, 100);
+        })
+    });
+</script>

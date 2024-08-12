@@ -23,22 +23,5 @@ document.addEventListener('livewire:init', () => {
             console.log('New message received:', data);
             Livewire.dispatch('newMessageReceived', { data: data });
         });
-
-    Livewire.on('reFocus', function () {
-        document.getElementById('typeMessageId').focus();
-    })
-
-    Livewire.on('scrollBottom', function () {
-        setTimeout(() => {
-            const messages = document.querySelectorAll('.message');
-            if (messages.length > 0) {
-                const lastMessage = messages[messages.length - 1];
-                lastMessage.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'end'
-                });
-            }
-        }, 100);
-    })
 });
 

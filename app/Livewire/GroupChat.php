@@ -26,6 +26,11 @@ class GroupChat extends Component
     }
     public function sendMessage()
     {
+
+        $this->validate([
+            'message' => 'required'
+        ]);
+
         $newMessage = GroupMessage::create([
             'user_id' => auth()->id(),
             'room_id' => $this->roomId,
