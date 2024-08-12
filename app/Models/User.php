@@ -46,11 +46,11 @@ class User extends Authenticatable
     }
     public function messagesToMe()
     {
-        return $this->hasMany(Message::class, 'from')->where('to', auth()->id());
+        return $this->hasMany(Message::class, 'from', 'id')->where('to', auth()->id());
     }
 
     public function lastMessageToMe()
     {
-        return $this->hasOne(Message::class, 'from')->where('to', auth()->id())->latest();
+        return $this->hasOne(Message::class, 'from', 'id')->where('to', auth()->id())->latest();
     }
 }

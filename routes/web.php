@@ -16,4 +16,4 @@ Route::view('profile', 'profile')
 require __DIR__.'/auth.php';
 
 
-Route::get('/chat', [GeneralController::class, 'chat']);
+Route::get('/chat', [GeneralController::class, 'chat'])->middleware(['auth', 'verified']);
