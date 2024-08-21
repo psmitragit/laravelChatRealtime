@@ -7,11 +7,14 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\GroupMessage;
 use App\Events\GroupChat as EventGroupChat;
+use Livewire\WithFileUploads;
 
 class GroupChat extends Component
 {
+    use WithFileUploads;
     public $roomId;
     public $message = '';
+    public $file;
     public $messages;
     public function mount()
     {
@@ -24,26 +27,49 @@ class GroupChat extends Component
             ->get();
         $this->dispatch('scrollBottom');
     }
+    // public function updatedFile()
+    // {
+    //     $this->validate([
+    //         'file' => 'nullable|file|max:4096',
+    //     ]);
+    // }
     public function sendMessage()
     {
+        // $this->validate([
+        //     'message' => 'required',
+        //     'file' => 'nullable|file|max:4096',
+        // ]);
 
-        $this->validate([
-            'message' => 'required'
-        ]);
+        $customFileName = null;
 
-        $newMessage = GroupMessage::create([
+        $directory = storage_path('app/public/chat-uploads');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        if ($this->file) {
+            $fileExtension = $this->file->getClientOriginalExtension();
+            $customFileName = rand(11111, 99999) . time() . '.' . $fileExtension;
+            $this->file->storeAs('chat-uploads', $customFileName, 'public');
+        }
+
+        $data = [
             'user_id' => auth()->id(),
             'room_id' => $this->roomId,
             'message' => $this->message,
-        ]);
+            'file' => $customFileName,
+        ];
 
-        broadcast(new EventGroupChat($newMessage, $this->roomId));
+        GroupMessage::create($data);
+
+        broadcast(new EventGroupChat($this->roomId));
 
         $this->message = '';
+        $this->reset(['file']);
         $this->loadMessages();
     }
     #[On('newMessageReceived')]
-    public function notifyNewMessage($data)
+    public function notifyNewMessage()
     {
         $this->loadMessages();
     }

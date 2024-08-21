@@ -21,7 +21,7 @@ document.addEventListener('livewire:init', () => {
         })
         .listen('.group-chat', function (data) {
             console.log('New message received:', data);
-            Livewire.dispatch('newMessageReceived', { data: data });
+            Livewire.dispatch('newMessageReceived');
         });
 });
 

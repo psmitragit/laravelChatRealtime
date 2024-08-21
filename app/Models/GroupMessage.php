@@ -14,6 +14,7 @@ class GroupMessage extends Model
         'user_id',
         'room_id',
         'message',
+        'file'
     ];
 
     public function user()

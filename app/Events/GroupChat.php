@@ -21,12 +21,10 @@ class GroupChat implements ShouldBroadcastNow
      * Create a new event instance.
      */
 
-    public $message;
     public $roomId;
 
-    public function __construct(GroupMessage $message, $roomId)
+    public function __construct($roomId)
     {
-        $this->message = $message;
         $this->roomId = $roomId;
     }
 
@@ -40,12 +38,6 @@ class GroupChat implements ShouldBroadcastNow
         $channel = "group-chat.{$this->roomId}";
         return [
             new PresenceChannel($channel),
-        ];
-    }
-    public function broadcastWith(): array
-    {
-        return [
-            'message' => $this->message,
         ];
     }
     public function broadcastAs(): string
