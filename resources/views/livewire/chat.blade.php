@@ -28,7 +28,7 @@
             @endforeach
         </div>
 
-        <form wire:submit.prevent='sendMessage' id="scrollToDiv">
+        <form wire:submit.prevent='sendMessage' class="chatForm">
             <div class="message-input">
                 <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message..."
                     {{ !$recipientId ? 'disabled' : '' }}>

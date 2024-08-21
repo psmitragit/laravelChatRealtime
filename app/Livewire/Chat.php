@@ -12,7 +12,7 @@ use Livewire\WithFileUploads;
 class Chat extends Component
 {
     use WithFileUploads;
-    public $message;
+    public $message = '';
     public $file;
     public $messages = [];
     public $recipientId;
@@ -83,6 +83,7 @@ class Chat extends Component
         $this->messages[] = array_merge($newMessage->toArray(), ['user' => auth()->user()->toArray()]);
 
         $this->message = '';
+        $this->reset(['file']);
         $this->dispatch('reFocus');
         $this->dispatch('scrollBottom');
     }
