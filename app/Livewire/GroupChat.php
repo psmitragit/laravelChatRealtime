@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\GroupMessage;
@@ -27,18 +26,10 @@ class GroupChat extends Component
             ->get();
         $this->dispatch('scrollBottom');
     }
-    // public function updatedFile()
-    // {
-    //     $this->validate([
-    //         'file' => 'nullable|file|max:4096',
-    //     ]);
-    // }
     public function sendMessage()
     {
-        // $this->validate([
-        //     'message' => 'required',
-        //     'file' => 'nullable|file|max:4096',
-        // ]);
+
+        if (empty($this->message) && empty($this->file)) return false;
 
         $customFileName = null;
 

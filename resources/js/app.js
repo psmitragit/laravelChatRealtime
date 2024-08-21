@@ -8,19 +8,19 @@ document.addEventListener('livewire:init', () => {
 
     Echo.join(`group-chat.${roomId}`)
         .here((users) => {
-            console.log('Current users in the room:', users);
+            // console.log('Current users in the room:', users);
         })
         .joining((user) => {
-            console.log(`${user.name} has joined the chat`);
+            // console.log(`${user.name} has joined the chat`);
         })
         .leaving((user) => {
-            console.log(`${user.name} has left the chat`);
+            // console.log(`${user.name} has left the chat`);
         })
         .error((error) => {
-            console.error('Error in the group chat:', error);
+            // console.error('Error in the group chat:', error);
         })
         .listen('.group-chat', function (data) {
-            console.log('New message received:', data);
+            // console.log('New message received:', data);
             Livewire.dispatch('newMessageReceived');
         });
 });
