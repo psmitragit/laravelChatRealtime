@@ -7,10 +7,13 @@ use App\Models\User;
 use Livewire\Component;
 use App\Events\MessageSent;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 
 class Chat extends Component
 {
+    use WithFileUploads;
     public $message;
+    public $file;
     public $messages = [];
     public $recipientId;
     public $users = [];
@@ -53,15 +56,26 @@ class Chat extends Component
 
     public function sendMessage()
     {
-        $this->validate([
-            'message' => 'required|string|max:255',
-        ]);
+        if (empty($this->message) && empty($this->file)) return false;
+
+        $customFileName = null;
+
+        $directory = storage_path('app/public/chat-uploads');
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        if ($this->file) {
+            $fileExtension = $this->file->getClientOriginalExtension();
+            $customFileName = rand(11111, 99999) . time() . '.' . $fileExtension;
+            $this->file->storeAs('chat-uploads', $customFileName, 'public');
+        }
 
         $newMessage = Message::create([
             'from' => auth()->id(),
             'to' => $this->recipientId,
             'message' => $this->message,
-            'is_seen' => false,
+            'file' => $customFileName,
         ]);
 
         broadcast(new MessageSent($newMessage, User::find($this->recipientId)));

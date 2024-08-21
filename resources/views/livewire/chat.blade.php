@@ -17,6 +17,12 @@
         <div class="messages">
             @foreach ($messages as $msg)
                 <div class="message {{ $msg['from'] == auth()->id() ? 'sent' : 'received' }}">
+                    @if (!empty($msg['file']))
+                        <div>
+                            <a href="{{ asset('storage/chat-uploads/' . $msg['file']) }}" target="_blank">See
+                                attachment</a>
+                        </div>
+                    @endif
                     <p>{{ $msg['message'] }}</p>
                 </div>
             @endforeach
@@ -26,6 +32,12 @@
             <div class="message-input">
                 <input id="typeMessageId" type="text" wire:model="message" placeholder="Type a message..."
                     {{ !$recipientId ? 'disabled' : '' }}>
+                <div>
+                    <input type="file" wire:model='file'>
+                    @error('file')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
                 <button type="submit" {{ !$recipientId ? 'disabled' : '' }}>Send</button>
             </div>
         </form>
