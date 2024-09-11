@@ -40,7 +40,10 @@
                 $participants = array_unique($participants);
             @endphp
             @foreach($participants as $participant)
-                <li>{{ $participant }}</li>
+            @php
+                $userRow = App\Models\User::find($participant);
+            @endphp
+                <li>{{ $userRow->name }}</li>
             @endforeach
         </ul>
     </div>

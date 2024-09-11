@@ -87,7 +87,7 @@ class GroupChat extends Component
             unset($this->participants[$key]);
         }
     }
-    
+
 
 
     public function render()
