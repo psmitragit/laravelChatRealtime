@@ -33,6 +33,17 @@
             </form>
         </div>
     </div>
+    <div>
+        <h4>Participants</h4>
+        <ul>
+            @php
+                $participants = array_unique($participants);
+            @endphp
+            @foreach($participants as $participant)
+                <li>{{ $participant }}</li>
+            @endforeach
+        </ul>
+    </div>
 </div>
 <script>
     document.addEventListener('livewire:init', () => {

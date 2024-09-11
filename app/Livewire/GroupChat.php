@@ -64,6 +64,32 @@ class GroupChat extends Component
     {
         $this->loadMessages();
     }
+
+
+
+    public $participants = [];
+    #[On('updateUserList')]
+    public function handel_updateUserList($userIds): void
+    {
+        $participants = [];
+        $allParticipants = array_merge($participants, $userIds);
+        $this->participants = $allParticipants;
+    }
+    #[On('userJoined')]
+    public function handel_userJoined($joinedUserId): void
+    {
+        array_push($this->participants, $joinedUserId);
+    }
+    #[On('userLeft')]
+    public function handel_userLeft($leftUserId): void
+    {
+        if (($key = array_search($leftUserId, $this->participants)) !== false) {
+            unset($this->participants[$key]);
+        }
+    }
+    
+
+
     public function render()
     {
         return view('livewire.group-chat');
