@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use GuzzleHttp\Client;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Models\GroupMessage;
-use App\Events\GroupChat as EventGroupChat;
 use Livewire\WithFileUploads;
+use App\Events\GroupChat as EventGroupChat;
+use App\Http\Controllers\RecordingController;
 
 class GroupChat extends Component
 {
@@ -88,7 +90,89 @@ class GroupChat extends Component
         }
     }
 
+    // public function getResourceId()
+    // {
+    //     // $recordingController = new RecordingController();
+    //     // $res = $recordingController->acquire();
 
+
+
+
+    //     $appId = env('AGORA_APP_ID');
+    //     $apiUrl = env('AGORA_REST_API') . '/' . $appId;
+    //     $url = "{$apiUrl}/cloud_recording/acquire";
+    //     $client = new Client();
+
+    //     $customerId = env('AGORA_CUSTOMER_ID');
+    //     $customerSecret = env('AGORA_CUSTOMER_SECRET');
+
+    //     $credentials = $customerId . ":" . $customerSecret;
+    //     $base64Credentials = base64_encode($credentials);
+
+    //     $param = [
+    //         'cname' => 'httpClient463224',
+    //         'uid' => '527841',
+    //         'clientRequest' => [
+    //             'resourceExpiredHour' => 24,
+    //             'scene' => 1,
+    //         ]
+    //     ];
+
+    //     $arr_header = "Authorization: Basic " . $base64Credentials;
+    //     $curl = curl_init();
+    //     curl_setopt_array(
+    //         $curl,
+    //         array(
+    //             CURLOPT_URL => $url,
+    //             CURLOPT_RETURNTRANSFER => true,
+    //             CURLOPT_ENCODING => '',
+    //             CURLOPT_MAXREDIRS => 10,
+    //             CURLOPT_TIMEOUT => 0,
+    //             CURLOPT_FOLLOWLOCATION => true,
+    //             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //             CURLOPT_CUSTOMREQUEST => 'POST',
+    //             CURLOPT_HTTPHEADER => array($arr_header,    'Content-Type: application/json'),
+    //             CURLOPT_POSTFIELDS => json_encode($param)
+    //         )
+    //     );
+
+    //     $response = curl_exec($curl);
+    //     if ($response === false) {
+    //         echo "Error in cURL : " . curl_error($curl);
+    //     }
+    //     curl_close($curl);
+
+    //     dd($response);
+
+    //     // // try {
+    //     //     $response = $client->post($url, [
+    //     //         'headers' => [
+    //     //             'Authorization' => "Basic $credentials",
+    //     //             'Content-Type' => 'application/json;charset=utf-8'
+    //     //         ],
+    //     //         'json' => [
+    //     //             'cname'=> 'httpClient463224',
+    //     //             'uid'=> '527841',
+    //     //             'clientRequest' => [
+    //     //                 'resourceExpiredHour' => 24,
+    //     //                 'scene' => 1
+    //     //             ]
+    //     //         ]
+    //     //     ]);
+
+    //     //     dd($response);
+
+    //     //     $result = json_decode($response->getBody(), true);
+    //     //     return response()->json([
+    //     //         'resourceId' => $result['resourceId']
+    //     //     ]);
+    //     // } catch (\Exception $e) {
+    //     //     return response()->json([
+    //     //         'error' => $e->getMessage()
+    //     //     ], 500);
+    //     // }
+
+    // }
 
     public function render()
     {

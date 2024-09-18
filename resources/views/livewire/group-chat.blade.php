@@ -1,4 +1,6 @@
 <div>
+
+    {{-- chat container --}}
     <div class="chat-container">
         <div class="chat-content">
             <div class="messages">
@@ -33,20 +35,99 @@
             </form>
         </div>
     </div>
+    {{-- chat container --}}
+
+
+
+    {{-- perticipents --}}
     <div>
         <h4>Participants</h4>
         <ul>
             @php
                 $participants = array_unique($participants);
             @endphp
-            @foreach($participants as $participant)
-            @php
-                $userRow = App\Models\User::find($participant);
-            @endphp
+            @foreach ($participants as $participant)
+                @php
+                    $userRow = App\Models\User::find($participant);
+                @endphp
                 <li>{{ $userRow->name }}</li>
             @endforeach
         </ul>
     </div>
+    {{-- perticipents --}}
+
+
+
+    {{-- recording --}}
+    <div>
+        <button id="startRecording">Start Recording</button>
+        <button id="stopRecording" disabled>Stop Recording</button>
+
+        <script>
+            let mediaRecorder;
+            let recordedChunks = [];
+            let stream;
+
+            async function startRecording() {
+                try {
+                    stream = await navigator.mediaDevices.getDisplayMedia({
+                        video: true,
+                        audio: true
+                    });
+
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, {
+                            type: 'video/webm'
+                        });
+                        const url = URL.createObjectURL(blob);
+
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `recording-${new Date().toISOString().split('T')[0]}.webm`;
+                        a.click();
+                        const formData = new FormData();
+                        formData.append('video', blob, 'recording.webm');
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'));
+
+                        fetch('/upload-video', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                            .catch(error => console.error('Error:', error));
+                    };
+
+                    mediaRecorder.start();
+                    document.getElementById('stopRecording').disabled = false;
+                } catch (error) {
+                    console.error('Error starting recording.', error);
+                }
+            }
+
+            function stopRecording() {
+                if (mediaRecorder) {
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                    document.getElementById('stopRecording').disabled = true;
+                }
+            }
+
+            document.getElementById('startRecording').addEventListener('click', startRecording);
+            document.getElementById('stopRecording').addEventListener('click', stopRecording);
+        </script>
+    </div>
+    {{-- recording --}}
+
 </div>
 <script>
     document.addEventListener('livewire:init', () => {
